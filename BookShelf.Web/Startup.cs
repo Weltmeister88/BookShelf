@@ -1,3 +1,6 @@
+using Autofac;
+using BookShelf.Core.Database;
+using BookShelf.Web.Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -19,6 +22,8 @@ namespace BookShelf.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -28,7 +33,7 @@ namespace BookShelf.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -66,6 +71,16 @@ namespace BookShelf.Web
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            applicationLifetime.ApplicationStopping.Register(OnShutdown);
+
+            var dbInitializer = IoCConfig.Container.Resolve<IDbInitializer>();
+            dbInitializer.Initialize();
+        }
+
+        private void OnShutdown()
+        {
+            IoCConfig.DeregisterContainer();
         }
     }
 }

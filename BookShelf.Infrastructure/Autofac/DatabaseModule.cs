@@ -10,6 +10,10 @@ namespace BookShelf.Infrastructure.Autofac
             builder.RegisterType<ApplicationDbContext>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<DbInitializer>()
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
         }
     }
 }

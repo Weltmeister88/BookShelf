@@ -8,10 +8,10 @@ namespace BookShelf.Infrastructure.Database
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public DbInitializer(IApplicationDbContext dbContext)
+        public DbInitializer(ApplicationDbContext dbContext)
         {
             // NOTE: Database property can also be defined on the interface
-            _dbContext = (ApplicationDbContext)dbContext;
+            _dbContext = dbContext;
         }
 
         public void Initialize()

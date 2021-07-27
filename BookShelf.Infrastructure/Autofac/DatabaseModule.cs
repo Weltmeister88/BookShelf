@@ -8,7 +8,6 @@ namespace BookShelf.Infrastructure.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ApplicationDbContext>()
-                .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<DbInitializer>()

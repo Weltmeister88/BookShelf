@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using BookShelf.Core.Repositories;
 using BookShelf.Infrastructure.Database;
+using BookShelf.Infrastructure.Repositories;
 
 namespace BookShelf.Infrastructure.Autofac
 {
@@ -12,6 +14,10 @@ namespace BookShelf.Infrastructure.Autofac
 
             builder.RegisterType<DbInitializer>()
                 .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<UnitOfWork>()
+                .As<IUnitOfWork>()
                 .InstancePerLifetimeScope();
         }
     }

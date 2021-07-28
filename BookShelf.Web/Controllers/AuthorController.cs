@@ -10,14 +10,13 @@ namespace BookShelf.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthorController : ControllerBase
+    public class AuthorController : EntityController<IAuthorRepository, Author>
     {
-        private readonly IAuthorRepository _authorRepository;
         private readonly IMapper _mapper;
 
         public AuthorController(IAuthorRepository authorRepository, IMapper mapper)
+            : base(authorRepository)
         {
-            _authorRepository = authorRepository;
             _mapper = mapper;
         }
 
@@ -26,7 +25,7 @@ namespace BookShelf.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AuthorDto>))]
         public ActionResult<IEnumerable<AuthorDto>> Get()
         {
-            return Ok(_mapper.Map<IEnumerable<Author>, IEnumerable<AuthorDto>>(_authorRepository.GetAll()));
+            return Ok(_mapper.Map<IEnumerable<Author>, IEnumerable<AuthorDto>>(Repository.GetAll()));
         }
 
         [HttpGet("{id}")]
@@ -35,11 +34,8 @@ namespace BookShelf.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthorDto))]
         public ActionResult<AuthorDto> Get(int id)
         {
-            var author = _authorRepository.Get(id);
-            if (author == null)
-            {
-                return NotFound(id);
-            }
+            var author = Repository.Get(id);
+            if (author == null) return NotFound(id);
             return Ok(_mapper.Map<AuthorDto>(author));
         }
 
@@ -48,13 +44,10 @@ namespace BookShelf.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         public ActionResult Post([FromBody] AuthorAddDto author)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            Author entity = _mapper.Map<Author>(author);
-            _authorRepository.Add(entity);
+            var entity = _mapper.Map<Author>(author);
+            Repository.Add(entity);
             return Ok(entity.Id);
         }
 
@@ -64,16 +57,10 @@ namespace BookShelf.Web.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public ActionResult Put([FromBody] AuthorDto author)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var existingAuthor = _authorRepository.Get(author.Id);
-            if (existingAuthor == null)
-            {
-                return NotFound(author.Id);
-            }
-            _authorRepository.Update(_mapper.Map(author, existingAuthor));
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var existingAuthor = Repository.Get(author.Id);
+            if (existingAuthor == null) return NotFound(author.Id);
+            Repository.Update(_mapper.Map(author, existingAuthor));
             return NoContent();
         }
 
@@ -82,12 +69,9 @@ namespace BookShelf.Web.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public ActionResult Delete(int id)
         {
-            var author = _authorRepository.Get(id);
-            if (author == null)
-            {
-                return NotFound(id);
-            }
-            _authorRepository.Remove(author);
+            var author = Repository.Get(id);
+            if (author == null) return NotFound(id);
+            Repository.Remove(author);
             return NoContent();
         }
     }

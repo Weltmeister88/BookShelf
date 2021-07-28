@@ -89,6 +89,8 @@ namespace BookShelf.Web
 
             ConfigureSwagger(app);
 
+            app.UseResponseCaching();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

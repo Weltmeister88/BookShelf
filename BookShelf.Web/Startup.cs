@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BookShelf.Core.Database;
@@ -32,6 +33,10 @@ namespace BookShelf.Web
             services.AddControllersWithViews(config =>
             {
                 config.Filters.Add<SaveChangesActionFilter>();
+            }).AddJsonOptions(opts =>
+            {
+                var enumConverter = new JsonStringEnumConverter();
+                opts.JsonSerializerOptions.Converters.Add(enumConverter);
             });
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

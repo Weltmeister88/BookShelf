@@ -22,27 +22,27 @@ namespace BookShelf.Web.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BookDto>))]
-        public ActionResult<IEnumerable<BookDto>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BookListingDto>))]
+        public ActionResult<IEnumerable<BookListingDto>> Get()
         {
-            return Ok(_mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(Repository.GetAll()));
+            return Ok(_mapper.Map<IEnumerable<Book>, IEnumerable<BookListingDto>>(Repository.GetAll()));
         }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BookDto))]
-        public ActionResult<BookDto> Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BookListingDto))]
+        public ActionResult<BookListingDto> Get(int id)
         {
             var book = Repository.Get(id);
             if (book == null) return NotFound(id);
-            return Ok(_mapper.Map<BookDto>(book));
+            return Ok(_mapper.Map<BookListingDto>(book));
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
-        public ActionResult Post([FromBody] BookAddDto book)
+        public ActionResult Post([FromBody] BookEditDto book)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -55,12 +55,22 @@ namespace BookShelf.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult Put([FromBody] BookDto book)
+        public ActionResult Put(int id, [FromBody] BookEditDto bookListing)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var existingBook = Repository.Get(book.Id);
-            if (existingBook == null) return NotFound(book.Id);
-            Repository.Update(_mapper.Map(book, existingBook));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != bookListing.Id)
+            {
+                ModelState.TryAddModelError(nameof(BookEditDto.Id), "Ids must match.");
+                return BadRequest(ModelState);
+            }
+
+            var existingBook = Repository.Get(id);
+            if (existingBook == null) return NotFound(bookListing.Id);
+            Repository.Update(_mapper.Map(bookListing, existingBook));
             return NoContent();
         }
 

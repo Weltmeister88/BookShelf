@@ -7,10 +7,11 @@ namespace BookShelf.Web.DTOs
     {
         public MappingProfile()
         {
-            CreateMap<Author, AuthorDto>().ReverseMap();
-            CreateMap<Author, AuthorAddDto>().ReverseMap();
-            CreateMap<Book, BookDto>().ReverseMap();
-            CreateMap<Book, BookAddDto>().ReverseMap();
+            CreateMap<Book, BookListingDto>()
+                .ForMember(dest => dest.Modified, opt => opt.MapFrom(src => src.ModifiedUtc))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.ToString()))
+                .ReverseMap();
+            CreateMap<Book, BookEditDto>().ReverseMap();
         }
     }
 }

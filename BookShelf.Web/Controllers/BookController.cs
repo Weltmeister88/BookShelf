@@ -31,12 +31,12 @@ namespace BookShelf.Web.Controllers
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BookListingDto))]
-        public ActionResult<BookListingDto> Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BookEditDto))]
+        public ActionResult<BookEditDto> Get(int id)
         {
             var book = Repository.Get(id);
             if (book == null) return NotFound(id);
-            return Ok(_mapper.Map<BookListingDto>(book));
+            return Ok(_mapper.Map<BookEditDto>(book));
         }
 
         [HttpPost]

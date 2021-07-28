@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BookShelf.Core.Database;
@@ -9,6 +10,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace BookShelf.Web
 {
@@ -35,6 +38,30 @@ namespace BookShelf.Web
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddSwaggerGen(SetSwaggerGenOptions);
+        }
+
+        private static void SetSwaggerGenOptions(SwaggerGenOptions c)
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "BookShelf API",
+                Description = "A simple Book Shelf API for managing Books and Authors",
+                TermsOfService = new Uri("https://example.com/terms"),
+                Contact = new OpenApiContact
+                {
+                    Name = "Zarko Lomic",
+                    Email = "zarko.lomic@gmail.com",
+                    Url = new Uri("https://www.linkedin.com/in/zarko-lomic/"),
+                },
+                License = new OpenApiLicense
+                {
+                    Name = "Use under LICX",
+                    Url = new Uri("https://www.linkedin.com/in/zarko-lomic/"),
+                }
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -60,6 +87,8 @@ namespace BookShelf.Web
                 app.UseSpaStaticFiles();
             }
 
+            ConfigureSwagger(app);
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -82,8 +111,24 @@ namespace BookShelf.Web
                 }
             });
 
+            InitializeDatabase(app);
+        }
+
+        private static void InitializeDatabase(IApplicationBuilder app)
+        {
             var dbInitializer = app.ApplicationServices.GetAutofacRoot().Resolve<IDbInitializer>();
             dbInitializer.Initialize();
+        }
+
+        private static void ConfigureSwagger(IApplicationBuilder app)
+        {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.DocumentTitle = "Swagger UI - Book Shelf API";
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookShelf API V1");
+            });
         }
     }
 }

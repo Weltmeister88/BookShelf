@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BookShelf.Core.Database;
 using BookShelf.Core.Models;
 using Microsoft.EntityFrameworkCore;
 

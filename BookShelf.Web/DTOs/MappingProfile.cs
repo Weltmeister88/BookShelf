@@ -9,6 +9,8 @@ namespace BookShelf.Web.DTOs
         {
             CreateMap<Author, AuthorDto>().ReverseMap();
             CreateMap<Author, AuthorAddDto>().ReverseMap();
+            CreateMap<Book, BookDto>().ReverseMap();
+            CreateMap<Book, BookAddDto>().ReverseMap();
         }
     }
 }

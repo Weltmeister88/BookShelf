@@ -1,8 +1,9 @@
 <h1 id="tableLabel">Books</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
-
 <p *ngIf="!books"><em>Loading...</em></p>
+
+<a class="btn btn-sm btn-success" routerLink="/book-editor">Add Book</a>
+<p></p>
 
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="books">
   <thead>
@@ -25,8 +26,8 @@
       <td>{{ book.author }}</td>
       <td>{{ book.modified | date:'medium' }}</td>
       <td>
-        <a  class="btn btn-sm btn-primary mr-1" [routerLink]="['edit', book.id]">Edit</a>
-        <a  class="btn btn-sm btn-danger btn-delete-user" href="javascript:void(0)" (click)="delete(book.id)">Delete</a>
+        <a class="btn btn-sm btn-primary mr-1" routerLink="/book-editor/{{book.id}}">Edit</a>
+        <a class="btn btn-sm btn-danger btn-delete-user" href="javascript:void(0)" (click)="delete(book.id)">Delete</a>
       </td>
     </tr>
   </tbody>

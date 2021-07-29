@@ -1,33 +1,38 @@
-<h1 id="tableLabel">Books</h1>
+<div class="container custom-container" *ngIf="!isLoading">
+  <div class="col-md-12">
+    
+    <h3 *ngIf="isAdding" class="mb-3 text-center">Add Book</h3>
+    <h3 *ngIf="!isAdding" class="mb-3 text-center">Edit Book</h3>
 
-<p>This component demonstrates fetching data from the server.</p>
+    <div class="form-group">
+      <input type="text" [(ngModel)]="book.title" class="form-control" placeholder="Title"/>
+    </div>
 
-<p *ngIf="!books"><em>Loading...</em></p>
+    <div class="form-group">
+      <textarea type="text" [(ngModel)]="book.description" class="form-control" placeholder="Description"></textarea>
+    </div>
 
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="books">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Genre</th>
-      <th>Author</th>
-      <th>Modified</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let book of books">
-      <td>{{ book.id }}</td>
-      <td>{{ book.title }}</td>
-      <td>{{ book.description }}</td>
-      <td>{{ book.genre }}</td>
-      <td>{{ book.author }}</td>
-      <td>{{ book.modified | date:'medium' }}</td>
-      <td>
-        <a  class="btn btn-sm btn-primary mr-1" [routerLink]="['edit', book.id]">Edit</a>
-        <a  class="btn btn-sm btn-danger btn-delete-user" href="javascript:void(0)" (click)="delete(book)">Delete</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <div class="form-group">
+      <select class="form-control" [(ngModel)]="book.genre">
+        <option *ngFor="let genre of genres" [ngValue]="genre.value">
+          {{ genre.value }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <select class="form-control" [(ngModel)]="book.authorId">
+        <option *ngFor="let author of authors" [ngValue]="author.id">
+          {{ author.value }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <button *ngIf="isAdding" class="btn btn-success btn-lg btn-block" (click)="create()">Add</button>
+      <button *ngIf="!isAdding" class="btn btn-success btn-lg btn-block" (click)="update()">Edit</button>
+      <button class="btn btn-primary btn-lg btn-block" (click)="cancel()">Cancel</button>
+    </div>
+    
+  </div>
+</div>

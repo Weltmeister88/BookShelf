@@ -25,6 +25,8 @@ import { BookEditorComponent } from './book-editor/book-editor.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'books', component: BooksComponent },
+      { path: 'book-editor/:id', component: BookEditorComponent },
+      { path: 'book-editor', component: BookEditorComponent },
     ])
   ],
   providers: [],

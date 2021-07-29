@@ -11,7 +11,8 @@ namespace BookShelf.Web.DTOs
                 .ForMember(dest => dest.Modified, opt => opt.MapFrom(src => src.ModifiedUtc))
                 .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.ToString()))
                 .ReverseMap();
-            CreateMap<Book, BookEditDto>().ReverseMap();
+            CreateMap<Book, BookEditDto>();
+            CreateMap<BookEditDto, Book>().ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }

@@ -2,20 +2,27 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BookShelf.Core.Database;
 using BookShelf.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace BookShelf.Infrastructure.Database
 {
     public class ApplicationDbContext : DbContext
     {
+        private readonly DatabaseOptions _databaseOptions;
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
 
+        public ApplicationDbContext(IOptions<DatabaseOptions> databaseOptions)
+        {
+            _databaseOptions = databaseOptions.Value;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // FIXME: load connection string from configuration
-            optionsBuilder.UseInMemoryDatabase("BookShelfDb");
+            optionsBuilder.UseInMemoryDatabase(_databaseOptions.DatabaseName);
             base.OnConfiguring(optionsBuilder);
         }
 

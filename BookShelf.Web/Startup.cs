@@ -45,6 +45,8 @@ namespace BookShelf.Web
             });
 
             services.AddSwaggerGen(SetSwaggerGenOptions);
+
+            services.Configure<DatabaseOptions>(Configuration.GetSection(DatabaseOptions.ConfigurationKey));
         }
 
         private static void SetSwaggerGenOptions(SwaggerGenOptions c)

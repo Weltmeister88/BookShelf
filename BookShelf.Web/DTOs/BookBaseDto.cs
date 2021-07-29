@@ -8,6 +8,6 @@ namespace BookShelf.Web.DTOs
         public string Title { get; set; }
         public string Description { get; set; }
         [Required]
-        public Genre Genre { get; set; }
+        public Genre? Genre { get; set; }
     }
 }

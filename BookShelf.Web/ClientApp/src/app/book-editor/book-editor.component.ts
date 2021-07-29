@@ -28,7 +28,6 @@ export class BookEditorComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.info("aabb");
     this.isLoading = true;
     this.id = this.actRoute.snapshot.params['id'];
     this.isAdding = !this.id;
